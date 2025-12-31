@@ -7,6 +7,6 @@ from selenium.webdriver.chrome.options import Options
 def driver():
     options = Options()
     options.add_argument('--headless')
-    browser = webdriver.Chrome(options=Options())
+    browser = webdriver.Chrome(options=options)
     yield browser
     browser.quit()
