@@ -8,4 +8,5 @@ def driver():
     options = Options()
     options.add_argument('--headless')
     browser = webdriver.Chrome(options=Options())
-    return browser
+    yield browser
+    browser.quit()
