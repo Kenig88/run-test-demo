@@ -6,11 +6,11 @@ on:
       deployment_target:
         description: Choose target
         required: true
-        default:
-          type: choice
-          options:
-            - first_test
-            - second_test
+        type: choice
+        default: first_test
+        options:
+          - first_test
+          - second_test
 
 jobs:
   test:
@@ -19,17 +19,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: setup Python
+
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.12"
+
       - name: Install Chrome
-        run: sudo apt-get install google-chrome-stable
-      - name: install dependencies
+        run: sudo apt-get update && sudo apt-get install -y google-chrome-stable
+
+      - name: Install dependencies
         run: pip install -r requirements.txt
+
       - name: first_test
-        if: "github.event.inputs.deployment_target == 'first_test'"
+        if: github.event.inputs.deployment_target == 'first_test'
         run: pytest tests/test_button.py::test_button_1_exist
+
       - name: second_test
-        if: "github.event.inputs.deployment_target == 'second_test'"
+        if: github.event.inputs.deployment_target == 'second_test'
         run: pytest tests/test_button.py::test_button_2_exist
