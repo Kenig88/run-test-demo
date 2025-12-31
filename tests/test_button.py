@@ -1,11 +1,4 @@
-from selenium import webdriver
-import pytest
-
-
-@pytest.fixture()
-def driver():
-    browser = webdriver.Chrome()
-    return browser
+from conftest import driver
 
 
 def test_button_exist(driver):
