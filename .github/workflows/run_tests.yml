@@ -181,11 +181,16 @@ jobs:
     runs-on: ubuntu-latest
     needs: generate-report
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Download report artifact
         uses: actions/download-artifact@v4
         with:
           name: allure-report
+          path: _site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -193,4 +198,5 @@ jobs:
           path: _site
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
