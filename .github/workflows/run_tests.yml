@@ -45,9 +45,10 @@ jobs:
             pytest tests/test_button.py::test_button_2_exist --alluredir=allure-results
           fi
 
-      # 👉 Забираем историю из gh-pages
+      # ✅ Забираем историю (если gh-pages уже существует)
       - name: Load Allure history
         if: always()
+        continue-on-error: true
         uses: actions/checkout@v4
         with:
           ref: gh-pages
@@ -57,9 +58,11 @@ jobs:
         if: always()
         run: |
           mkdir -p allure-results/history
-          cp -r gh-pages/history allure-results/ || true
+          if [ -d gh-pages/history ]; then
+            cp -r gh-pages/history allure-results/
+          fi
 
-      # 👉 Генерация отчёта
+      # ✅ Генерация отчёта
       - name: Generate Allure Report
         if: always()
         uses: simple-elf/allure-report-action@v1
@@ -68,10 +71,11 @@ jobs:
           allure_report: allure-report
           allure_history: allure-history
 
-      # 👉 Публикация обратно в gh-pages
-      - name: Deploy Allure report to GitHub Pages
+      # ✅ Публикация + сохранение истории
+      - name: Deploy Allure report to gh-pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-history
+          keep_files: true
